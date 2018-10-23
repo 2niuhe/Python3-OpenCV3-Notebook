@@ -1,0 +1,7 @@
+*.avi
+*.jpg
+*.png
+*.bmp
+*.pyc
+venv/*
+venv/
