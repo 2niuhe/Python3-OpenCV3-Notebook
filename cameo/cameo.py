@@ -7,7 +7,6 @@ class Cameo(object):
     def __init__(self):
         self._windowManager = WindowManager('Cameo',self.onKeypress)
         self._captureManager = CaptureManager(cv2.VideoCapture("/dev/video0"),self._windowManager,True)
-        self._curveFilter = filters.EmbossFilter()
 
     def run(self):
         """run the main loop"""
@@ -16,8 +15,6 @@ class Cameo(object):
             self._captureManager.enterFrame()
             frame = self._captureManager.frame
             # TODO:Filter the framea
-            filters.strokeEdges(frame,frame)
-            self._curveFilter.apply(frame,frame)
             self._captureManager.exitFrame()
             self._windowManager.processEvents()
 

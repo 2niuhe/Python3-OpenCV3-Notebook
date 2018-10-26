@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import cv2
 import numpy
+from numpy import long
 import time
 
 class CaptureManager(object):
@@ -18,8 +19,11 @@ class CaptureManager(object):
         self._videoWriter = None
 
         self._startTime = None
-        self._framesElapsed = int(0)
+        self._framesElapsed = long(0)
         self._fpsEstimate = None
+
+        self._picindex = 0
+        self._interval = 5
 
     @property
     def channel(self):
@@ -68,6 +72,9 @@ class CaptureManager(object):
             timeElapsed = time.time() - self._startTime
             self._fpsEstimate = self._framesElapsed / timeElapsed
         self._framesElapsed += 1
+        if (self._framesElapsed % self._interval == 0):
+            self._imageFilename =( "roadline_%d.bmp" % self._picindex)
+            self._picindex +=1
 
         # Draw to the window,if any
         if self.previewWindowManager is not None:
@@ -80,6 +87,7 @@ class CaptureManager(object):
         # Write to image file,if any
         if self.isWritingImage:
             cv2.imwrite(self._imageFilename,self._frame)
+            print("write image to file: %s" % self._imageFilename)
             self._imageFilename = None
 
         # Write to video file,if any
@@ -142,7 +150,7 @@ class WindowManager(object):
         cv2.imshow(self._windowName,frame)
 
     def destoryWindow(self):
-        cv2.destoryWindow(self._windowName)
+        cv2.destroyWindow(self._windowName)
         self._isWindowCreated = False
 
     def processEvents(self):
